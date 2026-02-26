@@ -1,5 +1,6 @@
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Scanner;
 
 public class PrimeThread{
     
@@ -32,7 +33,13 @@ public class PrimeThread{
      * you need to implement this!
      */
     private static int countPrimes(int min, int max) {
-        return 0;
+        int count = 0;
+        for(int num = min; num<=max; num++) {
+            if(isPrime(num)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -40,8 +47,14 @@ public class PrimeThread{
      * x is assumed to be greater than 1.
      * You need to implement this!
      */
+    //bad method
     private static boolean isPrime(int x) {
-        return false;
+        for(int i=2; i<x; i++) {
+            if(x%i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void test(){
@@ -58,21 +71,32 @@ public class PrimeThread{
         else
             System.out.println("Your computer has " + processors + " available processors.\n");
         //uncomment the following once you're ready to take user input for the number of threads and max value to test
-//        Scanner reader = new Scanner(System.in);  // Reading from System.in
-//        System.out.println("Enter the number for which you wish to know how many primes are smaller than it: ");
-//        int max = reader.nextInt();
-//        System.out.println("Enter the number of threads you wish to use in your program");
-//        int threads = reader.nextInt();
+        Scanner reader = new Scanner(System.in);  // Reading from System.in
+        System.out.println("Enter the number for which you wish to know how many primes are smaller than it: ");
+        int max = reader.nextInt();
+        System.out.println("Enter the number of threads you wish to use in your program");
+        int threads = reader.nextInt();
         
         
         
         
        //Starting time
        Instant start = Instant.now();
+
        
-       //comment the following line out once you've seen how this works.
-       new PrimeThread().test();
-       
+        CountPrimesThread [] threadArray = new CountPrimesThread[threads];
+        for(int i=0; i<threads; i++) {
+            threadArray[i] = new CountPrimesThread(i*(max/threads), (i+1)*max/threads);
+            threadArray[i].start();
+        }
+        for(int i=0; i<threads; i++) {
+            try {
+                threadArray[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        countPrimes(0, max);
        
        //Write the code for spawning the desired number of CountPrimeThreads
        //be sure to divide the work among the specified number of threads efficiently. Use .join() to check to see if a thread is finished.
