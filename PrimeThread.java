@@ -80,13 +80,14 @@ public class PrimeThread{
         
         
         
-       //Starting time
-       Instant start = Instant.now();
+        //Starting time
+        Instant start = Instant.now();
 
        
         CountPrimesThread [] threadArray = new CountPrimesThread[threads];
         for(int i=0; i<threads; i++) {
-            threadArray[i] = new CountPrimesThread(i*(max/threads), (i+1)*max/threads);
+            //threadArray[i] = new CountPrimesThread(i*(max/threads), (i+1)*(max/threads));
+            threadArray[i] = new CountPrimesThread(0, max*(3/4));
             threadArray[i].start();
         }
         for(int i=0; i<threads; i++) {
