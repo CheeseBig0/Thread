@@ -83,11 +83,18 @@ public class PrimeThread{
         //Starting time
         Instant start = Instant.now();
 
-       
+        int min = 0;
+        int distance = 0;
         CountPrimesThread [] threadArray = new CountPrimesThread[threads];
         for(int i=0; i<threads; i++) {
             //threadArray[i] = new CountPrimesThread(i*(max/threads), (i+1)*(max/threads));
-            threadArray[i] = new CountPrimesThread(0, max*(3/4));
+            distance = max-min;
+            if(i+1 != threads) {
+                distance *= 0.75;
+            }
+            //System.out.println("dist: " + distance);
+            threadArray[i] = new CountPrimesThread(min, min+distance);
+            min += distance;
             threadArray[i].start();
         }
         for(int i=0; i<threads; i++) {
